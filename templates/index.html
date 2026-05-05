@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII art Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+</head>
+<style>
+    body {font-family: 'Share Tech Mono', monospace;}
+</style>
+<body class="bg-black text-green-400 min-h-screen p-8">
+   <h1 class="text-3xl font-bold mb-8 tracking-widest">ASCII ART GENERATOR</h1>
+
+   <div class="mb-4">
+    <label class="block mb-1 text-sm tracking-widest ">YOUR TEXT</label>
+    <input type="text" id="text-input" placeholder="Type something..." maxlength="20" class="bg-black border-green-700 text-green-400 p-2 w-80 focus::outline-none focus:border-green-400">
+   </div>
+
+   <div class="mb-6">
+    <label class="block mb-2 text-sm tracking-widest">PICK A FONT</label>
+    <div class="flex flex-wrap gap-2">
+        <button onclick="selectFont(this, 'standard')" class="font-btn border border-green-800 px-3 py-1 text-xs hover:border-green-400">standard</button>
+        <button onclick="selectFont(this, 'graffiti')" class="font-btn border border-green-800 px-3 py-1 text-xs hover:border-green-400">graffiti</button>
+        <button onclick="selectFont(this, 'doom')" class="font-btn border border-green-800 px-3 py-1 text-xs hover:border-green-400">doom</button>
+        <button onclick="selectFont(this, '3d')" class="font-btn border border-green-800 px-3 py-1 text-xs hover:border-green-400">3d</button>
+        <button onclick="selectFont(this, 'block')" class="font-btn border border-green-800 px-3 py-1 text-xs hover:border-green-400">block</button>
+        <button onclick="selectFont(this, 'bubble')" class="font-btn border border-green-800 px-3 py-1 text-xs hover:border-green-400">bubble</button>
+        <button onclick="selectFont(this, 'digital')" class="font-btn border border-green-800 px-3 py-1 text-xs hover:border-green-400">digital</button>
+        <button onclick="selectFont(this, 'shadow')" class="font-btn border border-green-800 px-3 py-1 text-xs hover:border-green-400">shadow</button>
+        <button onclick="selectFont(this, 'slant')" class="font-btn border border-green-800 px-3 py-1 text-xs hover:border-green-400">slant</button>
+        <button onclick="selectFont(this, 'speed')" class="font-btn border border-green-800 px-3 py-1 text-xs hover:border-green-400">slant</button>
+    </div>
+   </div>
+
+     <!-- Generate Button -->
+  <button
+    onclick="generate()"
+    class="bg-green-400 text-black font-bold px-6 py-2 tracking-widest hover:bg-white mb-8"
+  >
+    GENERATE
+  </button>
+ 
+  <!-- Output Box -->
+  <div class="border border-green-800 p-4 min-h-32">
+    <p id="placeholder" class="text-green-800 text-sm">// output will appear here...</p>
+    <pre id="ascii-output" class="text-green-400 text-sm leading-tight hidden"></pre>
+  </div>
+ 
+
+  <script>
+    let selectedFont = "standard";
+
+    function selectFont(btn, font){
+        selectedFont = font
+        document.querySelectorAll(".font-btn").forEach(b=>{
+            b.classList.remove("border-green-400", "text-white")
+            b.classList.remove("border-green-800")
+        })
+      btn.classList.add("border-green-400", "text-white")
+      btn.classList.remove("border-green-800")
+    }
+
+
+    async function generate() {
+      // Grab whatever the user typed in the input box
+      const text = document.getElementById("text-input").value.trim()
+ 
+      // If the input is empty, do nothing
+      if (!text) return
+ 
+      // Send a request to our Go server's /generate route
+      // We pass the text and font as query parameters in the URL
+      const response = await fetch(`/generate?text=${encodeURIComponent(text)}&font=${selectedFont}`)
+ 
+      // Wait for the server to send back the ASCII art as plain text
+      const art = await response.text()
+ 
+      // Hide the placeholder message
+      document.getElementById("placeholder").classList.add("hidden")
+ 
+      // Show the ASCII art in the output box
+      const output = document.getElementById("ascii-output")
+      output.textContent = art
+      output.classList.remove("hidden")
+    }
+ 
+    // This lets the user press Enter instead of clicking Generate
+    document.getElementById("text-input").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") generate()
+    })
+  </script>
+</body>
+</html>
