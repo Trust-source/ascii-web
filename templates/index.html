@@ -44,7 +44,6 @@
  
   <!-- Output Box -->
   <div class="border border-green-800 p-4 min-h-32">
-    <p id="placeholder" class="text-green-800 text-sm">// output will appear here...</p>
     <pre id="ascii-output" class="text-green-400 text-sm leading-tight hidden"></pre>
   </div>
  
@@ -67,7 +66,7 @@
       // Grab whatever the user typed in the input box
       let text = document.getElementById("text-input").value.trim()
  
-      // If the input is empty, do nothing
+      
       if (!text) {
         text = "Type something..."
       }
@@ -79,9 +78,7 @@
       // Wait for the server to send back the ASCII art as plain text
       const art = await response.text()
  
-      // Hide the placeholder message
-      document.getElementById("placeholder").classList.add("hidden")
- 
+
       // Show the ASCII art in the output box
       const output = document.getElementById("ascii-output")
       output.textContent = art
