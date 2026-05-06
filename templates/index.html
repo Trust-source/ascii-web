@@ -65,10 +65,12 @@
 
     async function generate() {
       // Grab whatever the user typed in the input box
-      const text = document.getElementById("text-input").value.trim()
+      let text = document.getElementById("text-input").value.trim()
  
       // If the input is empty, do nothing
-      if (!text) return
+      if (!text) {
+        text = "Type something..."
+      }
  
       // Send a request to our Go server's /generate route
       // We pass the text and font as query parameters in the URL
